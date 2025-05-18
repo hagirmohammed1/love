@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>قصيدة إلى أمي الغالية</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: linear-gradient(to bottom right, #fff0f5, #ffe4ec, #fff);
+      color: #5a2a54;
+      padding: 2rem;
+      text-align: right;
+    }
+    main {
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 0 40px 10px rgba(255, 20, 147, 0.5);
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 2rem 3rem;
+      font-size: 1.5rem;
+      line-height: 2.2;
+      white-space: pre-wrap;
+      min-height: 300px;
+      position: relative;
+      transition: box-shadow 0.4s ease;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start; /* اجعل النص يبدأ من الأعلى */
+    }
+    .glow {
+      box-shadow: 0 0 60px 15px rgba(255, 20, 147, 0.8);
+    }
+    button {
+      display: inline-block;
+      margin: 1rem 0.5rem;
+      background-color: #a52a79;
+      border: none;
+      padding: 0.7rem 1.5rem;
+      color: white;
+      font-size: 1.1rem;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #7e1e5b;
+    }
+    #heart {
+      font-size: 2.5rem;
+      color: #e91e63;
+      text-align: center;
+      display: none;
+      margin-top: 1rem;
+      animation: pulse 1.6s ease-in-out infinite;
+      user-select: none;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.75; }
+      50% { transform: scale(1.3); opacity: 1; }
+    }
+    #controls {
+      text-align: center;
+    }
+    #signature {
+      margin-top: 2rem;
+      text-align: left;
+      font-size: 1.2rem;
+      color: #8a2c64;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <main id="poemTextContainer">
+    <div id="poemText"></div>
+    <div id="signature">— بإخلاص ومحبة، يوسف 💝</div>
+  </main>
+
+  <div id="controls">
+    <button id="startBtn">✍️ ابدأ الكتابة</button>
+    <button id="resetBtn" style="display: none;">🔄 إعادة</button>
+  </div>
+
+  <div id="heart">💖 أحبك يا أمي 💖</div>
+
+  <script>
+    const poem = `اماه ياسر جودي و وجودي
+اماه يا عين عيني يا زهر عمري والنسمات
+اماه يا نبع الحنان يا انس الجنان
+اماه يا روح روحي يا عطر زهري و اللمحات
+بك يرحمني الاله ويكشف الضر عني
+كرامة لك و لي بك باب مفتح الى الجنات
+اذا تأوهت تأوه الكون كله يواسيني
+واذا بسمت اشرق الكون وتبسم النيل الى الفرات
+بعيني ما نزل بك وبسمعي شكايتك
+لساني ذاكر وقلبي لم يفتر عن الدعوات
+لا أطفا الله نورك ابدا
+أيا شمعة أضاءت لنا في حالك الظلمات`;
+
+    const poemTextElem = document.getElementById('poemText');
+    const btn = document.getElementById('startBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const heart = document.getElementById('heart');
+    const signature = document.getElementById('signature');
+
+    let idx = 0;
+    let typing = false;
+    let typingInterval;
+
+    function typeWriter() {
+      if (idx < poem.length) {
+        poemTextElem.textContent += poem.charAt(idx);
+        idx++;
+        typingInterval = setTimeout(typeWriter, 140);
+      } else {
+        btn.style.display = 'none';
+        resetBtn.style.display = 'inline-block';
+        heart.style.display = 'block';
+        signature.style.display = 'block';
+        poemTextElem.parentElement.classList.remove('glow');
+      }
+    }
+
+    btn.addEventListener('click', () => {
+      if (!typing) {
+        typing = true;
+        poemTextElem.textContent = '';
+        idx = 0;
+        heart.style.display = 'none';
+        signature.style.display = 'none';
+        poemTextElem.parentElement.classList.add('glow');
+        typeWriter();
+      }
+    });
+
+    resetBtn.addEventListener('click', () => {
+      clearTimeout(typingInterval);
+      poemTextElem.textContent = '';
+      idx = 0;
+      typing = false;
+      btn.style.display = 'inline-block';
+      resetBtn.style.display = 'none';
+      heart.style.display = 'none';
+      signature.style.display = 'none';
+      poemTextElem.parentElement.classList.remove('glow');
+    });
+  </script>
+
+</body>
+</html>
