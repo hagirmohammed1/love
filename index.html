@@ -6,13 +6,22 @@
   <title>قصيدة إلى أمي الغالية</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+
+    :root {
+      --main-color: #a52a79;
+      --hover-color: #7e1e5b;
+      --glow-color: rgba(255, 20, 147, 0.8);
+      --bg-gradient: linear-gradient(to bottom right, #fff0f5, #ffe4ec, #fff);
+    }
+
     body {
       font-family: 'Cairo', sans-serif;
-      background: linear-gradient(to bottom right, #fff0f5, #ffe4ec, #fff);
+      background: var(--bg-gradient);
       color: #5a2a54;
       padding: 2rem;
       text-align: right;
     }
+
     main {
       background: #fff;
       border-radius: 15px;
@@ -25,19 +34,21 @@
       white-space: pre-wrap;
       min-height: 300px;
       position: relative;
-      transition: box-shadow 0.4s ease;
-
       display: flex;
       flex-direction: column;
-      justify-content: flex-start; /* اجعل النص يبدأ من الأعلى */
+      justify-content: flex-start;
+      transition: box-shadow 0.4s ease;
+      overflow-y: auto;
+      max-height: 80vh;
     }
+
     .glow {
-      box-shadow: 0 0 60px 15px rgba(255, 20, 147, 0.8);
+      box-shadow: 0 0 60px 15px var(--glow-color);
     }
+
     button {
-      display: inline-block;
       margin: 1rem 0.5rem;
-      background-color: #a52a79;
+      background-color: var(--main-color);
       border: none;
       padding: 0.7rem 1.5rem;
       color: white;
@@ -46,9 +57,11 @@
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
+
     button:hover {
-      background-color: #7e1e5b;
+      background-color: var(--hover-color);
     }
+
     #heart {
       font-size: 2.5rem;
       color: #e91e63;
@@ -58,13 +71,16 @@
       animation: pulse 1.6s ease-in-out infinite;
       user-select: none;
     }
+
     @keyframes pulse {
       0%, 100% { transform: scale(1); opacity: 0.75; }
       50% { transform: scale(1.3); opacity: 1; }
     }
+
     #controls {
       text-align: center;
     }
+
     #signature {
       margin-top: 2rem;
       text-align: left;
@@ -103,52 +119,64 @@
 أيا شمعة أضاءت لنا في حالك الظلمات`;
 
     const poemTextElem = document.getElementById('poemText');
-    const btn = document.getElementById('startBtn');
+    const startBtn = document.getElementById('startBtn');
     const resetBtn = document.getElementById('resetBtn');
     const heart = document.getElementById('heart');
     const signature = document.getElementById('signature');
+    const container = document.getElementById('poemTextContainer');
 
     let idx = 0;
     let typing = false;
     let typingInterval;
+    const speed = 90; // سرعة محسّنة تناسب القراءة
 
     function typeWriter() {
       if (idx < poem.length) {
         poemTextElem.textContent += poem.charAt(idx);
         idx++;
-        typingInterval = setTimeout(typeWriter, 140);
+        container.scrollTop = container.scrollHeight;
+        typingInterval = setTimeout(typeWriter, speed);
       } else {
-        btn.style.display = 'none';
-        resetBtn.style.display = 'inline-block';
-        heart.style.display = 'block';
-        signature.style.display = 'block';
-        poemTextElem.parentElement.classList.remove('glow');
+        typing = false;
+        showEndElements();
       }
     }
 
-    btn.addEventListener('click', () => {
+    function showEndElements() {
+      startBtn.style.display = 'none';
+      resetBtn.style.display = 'inline-block';
+      heart.style.display = 'block';
+      signature.style.display = 'block';
+      container.classList.remove('glow');
+    }
+
+    function startTyping() {
       if (!typing) {
         typing = true;
-        poemTextElem.textContent = '';
         idx = 0;
+        poemTextElem.textContent = '';
         heart.style.display = 'none';
         signature.style.display = 'none';
-        poemTextElem.parentElement.classList.add('glow');
+        startBtn.style.display = 'none';
+        container.classList.add('glow');
         typeWriter();
       }
-    });
+    }
 
-    resetBtn.addEventListener('click', () => {
+    function resetTyping() {
       clearTimeout(typingInterval);
-      poemTextElem.textContent = '';
-      idx = 0;
       typing = false;
-      btn.style.display = 'inline-block';
-      resetBtn.style.display = 'none';
+      idx = 0;
+      poemTextElem.textContent = '';
       heart.style.display = 'none';
       signature.style.display = 'none';
-      poemTextElem.parentElement.classList.remove('glow');
-    });
+      startBtn.style.display = 'inline-block';
+      resetBtn.style.display = 'none';
+      container.classList.remove('glow');
+    }
+
+    startBtn.addEventListener('click', startTyping);
+    resetBtn.addEventListener('click', resetTyping);
   </script>
 
 </body>
